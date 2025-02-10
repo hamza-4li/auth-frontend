@@ -11,7 +11,7 @@ export default function Signup() {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('auth-backend-production-20bb.up.railway.app/register', {
+            const res = await fetch('https://auth-backend-production-20bb.up.railway.app/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
