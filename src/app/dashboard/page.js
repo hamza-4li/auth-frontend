@@ -8,28 +8,48 @@ export default function Dashboard() {
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            router.push('/login');
-        } else {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            setUser({ email: payload.email });
-        }
+        const verifyAuth = async () => {
+            const res = await fetch('https://auth-backend-production-20bb.up.railway.app/check', {
+                method: 'GET',
+                credentials: 'include', // Include cookies for authentication
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data.user); // Store user data
+            } else {
+                router.push('/login'); // Redirect to login if not authenticated
+            }
+        };
+
+        verifyAuth();
     }, []);
 
+    const handleLogout = async () => {
+        await fetch('https://auth-backend-production-20bb.up.railway.app/logout', {
+            method: 'POST',
+            credentials: 'include', // Include cookies to clear the session
+        });
+        window.location.href = '/login'; // Redirect to login page after logout
+    };
+
+    if (!user) return <p>Loading...</p>;
+
     return (
-        <div>
+        <div className="p-5">
             <Navbar />
-            <div className="flex items-center justify-center h-screen bg-gray-100">
-                {user ? (
-                    <div className="text-center">
-                        <h1 className="text-3xl font-bold text-blue-600 mb-4">Welcome, {user.email}!</h1>
-                        <p className="text-lg">You are logged in successfully.</p>
-                    </div>
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
+            <h1 className="text-2xl font-bold">Welcome, {user.name}!</h1>
+            <p>Email: {user.email}</p>
+
+            {/* Logout Button */}
+            <button
+                onClick={handleLogout}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+            >
+                Logout
+            </button>
         </div>
     );
+
+
 }

@@ -15,14 +15,17 @@ export default function Login() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
+                credentials: "include"
             });
 
-            const data = await res.json();
+            const data = await res.json()
+
 
             if (res.ok) {
                 localStorage.setItem('token', data.token);
                 router.push('/dashboard');
             } else {
+                const errorData = await res.json();
                 alert(data.message || 'Login failed');
             }
         } catch (error) {
