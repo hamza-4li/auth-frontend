@@ -9,7 +9,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const verifyAuth = async () => {
-            const res = await fetch('https://auth-backend-production-20bb.up.railway.app/check', {
+            const res = await fetch('https://auth-backend-production-20bb.up.railway.app/dashboard', {
                 method: 'GET',
                 credentials: 'include', // Include cookies for authentication
             });
